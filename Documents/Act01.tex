@@ -1,0 +1,200 @@
+\documentclass[10pt]{article}
+\usepackage[tuftesque]{mdpchem}
+
+\title{MD Simulations of Ideal and Real Gases}
+\author{Physical Chemistry}
+\date{Fall 2017}
+
+\begin{document}
+\maketitle
+\begin{fullwidth}
+  \tableofcontents
+\end{fullwidth}
+
+\section{Introduction}
+In this week's lab, we will be performing atomic simulations of ideal and real gases.
+The purpose of today's exercise is to gain an intuitive understanding for the microscopic behavior of gases. 
+To do so, we will perform classical simulations of a non-interacting argon-like gas, using Newton's laws to determine the paths of atoms in time.
+We will continue our simulations of the dynamics of a gas by allowing the argon atoms to interact (approximately) as they would in reality.
+
+\section{Procedure}
+
+  \subsection{Running an ideal gas simulation and visualizing the results}
+  \label{sec:ideal-gas}
+  Follow the instructions of your professor to start a terminal and copy the simulation files you need into a directory in which you can work.
+  When done, execute the following commands, which run a simulation of 100 ideal gas particles with the mass of argon at a temperature of 100~K.
+
+\begin{enumerate}
+  \item Run the following commands.
+    The \filename{mdrun} step should take about half a minute.
+\begin{fullwidth}
+\begin{Verbatim}
+gmx grompp -f md.mdp -c equil_100.gro -p ideal.top -o ideal_100.tpr
+gmx mdrun -nt 1 -nb cpu -s ideal_100.tpr -c ideal_100.gro -e ideal_100.edr \
+          -g ideal_100.log -o ideal_100.trr
+\end{Verbatim}
+\end{fullwidth}
+  The first command prepares the simulation.
+    The second command runs the simulation; this writes a number of files, including \filename{ideal_100.log} and \filename{ideal_100.trr}, which will be important shortly.
+    If you are typing the second command on one line, omit the backslash.
+    Each command prints a ``\acro{GROMACS} cool quote'' (for some value of \emph{cool}) if it completes successfully.
+    For example,
+ \begin{Verbatim}
+ gcq#118: "Step On the Brakes" (2 Unlimited)
+ \end{Verbatim}
+    If you do not see a line that starts with \verb+gcq#+, then something has gone wrong; examine the terminal output for error messages and consult with your colleagues.
+
+
+  \item Load the simulation into \acro{VMD} and watch it evolve.
+    Do this by starting \acro{VMD}, then in the \selection{VMD Main} window, select \selection{File}, then \selection{New Molecule}.
+    Click the \selection{Browse} button, navigate to the directory you performed the simulation in, then choose \filename{equil_100.gro}.
+    After returning to the \selection{Molecule File Browser} window, click \selection{Load}.
+    This loads the first frame (initial positions) of the simulation.
+    Click \selection{Browse} again, then choose \filename{ideal_100.trr}.
+    When in the \selection{Molecule File Browser} window, choose \selection{Load all at once}, then click \selection{Load}.
+    This loads the remainder of the simulation.
+    Close the \selection{Molecule File Browser} window.
+
+  \item To see the motion of the atoms clearly, the display representation must be changed.
+    In the \selection{VMD Main} window, click on the \selection{Graphics} menu, then \selection{Representations}.
+    Change the \selection{Drawing Method} drop-down to \selection{VDW}.
+    Now, watch the movie by clicking the play button in the lower right of the \selection{VMD Main} window.
+    Write comments in your notebook describing the paths, speeds, and interactions of the atoms.
+    When you are done, exit \acro{VMD} by choosing \selection{File}, then \selection{Quit} in the \selection{VMD Main} window.
+
+  \item View the simulation log, which contains information about the energy of the simulation as it progresses.
+    To do this, open \filename{ideal_100.log} in a text editor.
+    Go to the very end, then up to find the section that looks like the following:
+\begin{Verbatim}
+	<======  ###############  ==>
+	<====  A V E R A G E S  ====>
+	<==  ###############  ======>
+
+	Statistics over 1000001 steps using 10001 frames
+\end{Verbatim}
+    Write down the average energy, temperature, and pressure in your notebook.
+    The average energy is given in the rather strange unit of kilojoules per mole of simulation copies.
+    Since our system copy includes 100 argon-like atoms, a mole of simulation copies contain 100 moles of argon atoms.
+    Thus, the reported energy is best interpreted as kilojoules per 100 moles of argon atoms.
+    \item \label{item:ideal-questions}
+    Answer the following questions in your lab notebook.
+    You will also need to write these answers in your report.
+    \begin{enumerate}
+      \item Are the directions of travel of particles distributed isotropically?
+      \item Do all particles travel with the same speed or with different speeds?
+      \item Is your simulation consistent with the ideal gas law?
+      To answer this, you will need to know that this simulation is contained in a cube $76.172\munit{\AA}$ on a side.
+      \item Is your simulation consistent with $\avg{E_K} = (3/2) R T$?
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Extending to other temperatures}
+Repeat the above procedure and analysis for ideal gases at 200~K and 300~K, by substituting \codelit{_200} and \codelit{_300} for \codelit{_100}, as appropriate.
+In addition, describe the differences among the three the simulation ``movies'' in your lab notebook.
+
+%\clearpage
+\subsection{Extending to interacting atoms}
+\begin{enumerate}
+  \item Run each of the following commands, pressing Return after each line.
+    This sets up and runs the simulation (a 5~ns simulation in steps of 1~fs, with atomic positions recorded every 0.1~ps).
+    This will take 2 -- 5 minutes.
+    
+\begin{fullwidth}    
+\begin{Verbatim}
+gmx grompp -f md_real.mdp -p argon.top -c equil_100.gro -o real_100.tpr
+gmx mdrun -nt 1 -nb cpu -s real_100.tpr -c real_100.gro -e real_100.edr \
+          -g real_100.log -o real_100.trr
+\end{Verbatim}
+\end{fullwidth}
+    
+    Again, if typing the second command into one line, omit the backslash.
+
+  \item View the evolution of the simulation in VMD.
+    Describe the differences from the ideal gas simulation.
+    Look especially for collisions, scattering, and dimerization of argon atoms.
+
+  \item Repeat the analysis of \autoref{sec:ideal-gas} item~\ref{item:ideal-questions}.
+
+  \item Repeat the above for simulations at 200 and 300~K.
+
+  \end{enumerate}
+
+  \subsection{Analysis of interactions}
+  The \emph{radial distribution function} $g(r)$ describes how likely it is to find two particles at a given separation $r$.
+  Specifically, $g(r)$ describes the probability $P(r)$ that two atoms are separated by a distance $r$, relative to the probability $P\subword{ideal}(r)$ that two particles of an ideal gas are separated by a distance $r$:
+    \[
+    g(r) = \frac{P(r)}{P\subword{ideal}(r)}
+  \]
+
+  The radial distribution function can be calculated using the \filename{gmx rdf} command.
+  For example:
+  \begin{fullwidth}
+\begin{Verbatim}
+gmx rdf -s real_100.tpr -f real_100.trr -ref 2 -sel 2 -o rdf_real_100.xvg
+\end{Verbatim}
+    \end{fullwidth}
+  This is not a trivial calculation, so it takes a minute or tw
+  This program produces a file named according to the \codelit{-o} option; in the above example, the output file is named \filename{rdf_real_100.xvg}.
+  This file can be plotted with your favorite plotting tool, such as Excel.
+  If importing the file to Excel, set the import options to a delimited, space-separated file, treating consecutive delimiters as one.
+  Perform the following analysis:
+  \begin{enumerate}
+    \item Plot $g(r)$ for all three real gas simulations and one ideal gas simulation.
+    Sketch them in your notebook in addition to plotting them in Excel.
+    \item Explain the physical significance of the following observations:
+      \begin{enumerate}
+        \item $g(r) \approx 1$ for the ideal gas simulation (forgiving how noisy $g(r)$ is at separations less than 10~Å).
+        \item $\displaystyle \lim_{r \to \infty} = 1$ for all simulations.
+        \item There is a maximum in $g(r)$ around 3.8~Å.
+        \item Is there any variation in height at the maximum with respect to temperature?
+          If so, what does this mean?
+      \end{enumerate}
+  
+    \item We will (eventually) determine that probability $P$ is related to free energy $\increment A$ by
+    \[
+    \increment A = -\kB T \ln \frac{P}{P_0}
+    \]
+      where $P_0$ is a defined reference state probability and $\kB$ is Boltzmann's constant.
+      Here, $P$ means probability, \emph{not} pressure.
+      Use $g(r)$ to estimate the free energy of argon dimerization at the three different temperatures considered.
+    This will require you to choose an unambiguous reference state $P_0$ and explain your choice.
+      Is there a trend in $\increment A$ as temperature changes?
+      Does this trend make sense in terms of the dynamics of the argon particles?
+
+
+  \item It is possible to extract the pair potential $V(r)$ that describes interatomic interactions from the pair correlation function $g(r)$.
+    The pair potential gives the potential energy of a pair of argon atoms at a separation of $r$.
+    The relationship between $g(r)$ and $V(r)$ is (again, not proven here)
+    \[
+      g(r) = \exp\parens{-V(r)/k_B T}
+    \]
+    Using your $g(r)$ data, extract $V(r)$ for each of the real gas simulations.
+    Sketch your results in your notebook.
+
+  \item Quantum mechanics predicts that the long-distance tail of $V(r)$ is proportional to $r^{-6}$.
+    Fit the long-distance tail of $V(r)$ for your 300~K simulation to a function $f(r) = C/r^6$, which should be possible by a suitable manipulation of your $V(r)$ data followed by a linear regression.
+      Your value of $C$ should be quoted with an error estimate.
+
+    \item The pair potential $V(r)$ can be related to the $a$ and $b$ parameters of the van der Waals equation.
+      Specifically,
+      \[
+      a = \frac{2\pi N_A^2 C}{3\sigma^3} \quad \text{and} \quad b=\frac{2\pi \sigma^3 N_A}{3}
+      \]
+      where $C$ is the constant from your $1/r^6$ fit above, $\sigma$ is the internuclear separation where $V(r) = 0$, and $N_A$ is Avogadro's number.
+      Calculate $a$ and $b$ using your previous results.
+      Compare the values you obtain to the known values for argon, which you must look up.
+      Use this comparison to comment on the accuracy of the simulations you just performed.
+
+  \end{enumerate}
+      
+\section{Report}
+Write a brief report answering the questions posed above, along with all descriptions requested along the way.
+You will need to include the graphs you generated.
+Prepare your report in \acro{PDF} (or, if necessary, \acro{docx}) format and e-mail it to me, along with your spreadsheet files or computer code and scans of your notebook pages.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
