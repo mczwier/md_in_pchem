@@ -4,14 +4,17 @@
 
 This distribution contains the following directories. Simulations are
 "ready to run" according to the instructions contained in this file or
-the documents in the `Documents/` directory.
+the documents in the `Documents/` directory. Some software packages
+(notably the GROMACS molecular dynamics engine and the VMD
+visualization program) are required. Information on how to install
+this software is provided in the "Getting Started" section below.
 
 * `Activity1_Ideal_Real_Gases/` — MD simulation to illustrate the
   differences between ideal and real gases. Also introduces radial
-  distribution functions and the connection between molecular
-  interaction energy and the parameters of the van der Waals equation.
-  This directory (and other activity directories) also contain example
-  output and analysis.
+  distribution functions and the connections between molecular size
+  and interaction energy and the parameters of the van der Waals
+  equation. This directory (and other activity directories) also
+  contain example output and analysis.
 * `Activity2_Meaning_Of_Beta/` — An inquiry-based activity to uncover
   the meaning of the constant (beta) in the Boltzmann distribution
   equation from the speed distribution of a real gas.
@@ -23,28 +26,41 @@ the documents in the `Documents/` directory.
   ODT, and DOCX files.
 * `Prep/` — Files and scripts necessary to prepare fully-independent
   simulations for different students or situations. Python and the
-  numpy and scipy libraries are required for this.
+  numpy and scipy libraries are required for this; the version that
+  ships with recent version of MacOS suffices.
   
-For those less familiar with molecular simulations, the "Getting
-started" section below provides instructions for how to obtain the
-necessary software and use the files provided here.
+The "Getting Started" section below provides instructions for how to
+obtain the necessary software and use the files provided here.
 
-## Getting started
+## Getting Started (MacOS)
 
-The following instructions are for Mac OS. Instructions for other
+The following instructions are for MacOS. Instructions for other
 operating systems (especially Windows) would be a welcome contribution
-from the community.  The most straightforward way to get things going
-is to install [MacPorts](https://www.macports.org/). If you do not
-have MacPorts installed already, follow the installation instructions
-on the MacPorts website; use the Package (.pkg) installer for maximum
-convenience. From there, start a terminal (the Terminal application
-located under `/Applications/Utilities`).  In the terminal, use
-MacPorts to install the GROMACS MD engine:
+from the community.
 
-`sudo port install gromacs`
+### Installing the necessary software
+The most straightforward way to get things going is to install
+[Homebrew](https://brew.sh/). Follow the (remarkably short)
+installation instructions as given on the Homebrew web page.  Then, in
+the terminal, run the following:
+```
+brew install gromacs
+```
 
-[Homebrew](https://brew.sh/) works just as well as MacPorts, at least
-for the purposes of obtaining a working copy of GROMACS.
+If you wish to run the Python-based analysis notebooks, also run
+```
+brew tap homebrew/science
+brew install python3 numpy scipy ipython jupyter
+brew install matplotlib --with-python3
+```
+or install the Anaconda Python Distribution from 
+<https://www.anaconda.com/download/>
+
+Finally, download the VMD viewer from
+<http://www.ks.uiuc.edu/Research/vmd/>. This requires a free
+registration.
+
+### Downloading the files necessary to run simulations and analysis
 
 To download the files necessary to perform the activities, clone this
 Git repository. Also in the terminal:
@@ -54,9 +70,6 @@ Git repository. Also in the terminal:
 This creates a directory named `md_in_pchem`. This is the starting
 point for all of the simulations.
 
-Finally, download the VMD viewer from
-<http://www.ks.uiuc.edu/Research/vmd/>. This requires a free
-registration.
 
 ## Running the simulations
 
@@ -105,7 +118,14 @@ cd Activity2_Meaning_Of_Beta
 
 This creates the files `vels_100.xvg`, `vels_200.xvg`, and
 `vels_300.xvg`, which contain the x velocities for each of the 100
-argon atoms in the simulation as a function of simulation time.
+argon atoms in the simulation as a function of simulation time. These
+files can then be loaded into your favorite analysis tool to construct
+histograms. For those wishing to use Excel but not wishing to use the
+Analysis ToolPak, a Python script (`make_vel_histogram.py`) has been
+provided to read atomic velocities and produce histograms in either a
+plain text table or CSV format. Python and Numpy are required, and the
+version of Python shipped with recent versions of MacOS suffices, as
+would Anaconda Python.
 
 ### The third activity (phase changes)
 
@@ -124,16 +144,16 @@ cd Activity3_Phase_Change/
 ### Running the Jupyter analysis notebooks
 
 If you are interested in exploring the Jupyter notebooks for analysis,
-download the Anaconda Python Distribution from
-(https://www.anaconda.com/download/). This is not necessary to run the
-simulations or to analyze them, but may be useful. Choose the Python 3
-version (not the Python 2.7 version). 
+install Python and the Jupyter notebook system either using Homebrew
+(see "Getting Started" above) or download the Anaconda Python
+Distribution from <https://www.anaconda.com/download/>. Choose the
+Python 3 version (not the Python 2.7 version).
 
-To run one of the analysis notebooks, run `jupyter notebook` from the
-Terminal in the `md_in_pchem` directory. This will start a web browser
-and display a listing of the contents of the `md_in_pchem` directory,
-which should include directories for each of the activities. Click on
-the directory for the activity whose analysis you want to run
+Once Python is installed, run `jupyter notebook` from the Terminal in
+the `md_in_pchem` directory. This will start a web browser and display
+a listing of the contents of the `md_in_pchem` directory, which should
+include directories for each of the activities. Click on the directory
+for the activity whose analysis you want to run
 (e.g. `Activity1_Ideal_Real_Gases`) and click on the Jupyter notebook
 (extension `.ipynb`, e.g., `Activity1_Analysis.ipynb`) to start the
 analysis notebook. These notebooks run from top to bottom (like a
@@ -141,17 +161,18 @@ Mathematica notebook, for instance); pressing Shift-Enter executes a
 cell and moves to the next one. To run the example analysis, just keep
 pressing Shift-Enter.
 
-### Equilibrating the simulations
+### (Re)equilibrating the simulations
 
 Pre-equilibrated simulations (at the correct temperature and density
 and every atom having an appropriate velocity) have been
 provided. However, to illustrate variability from simulation to
-simulation, it is necessary to re-equilibrate (generate new
-velocities). This requires Python and the Numpy library (provided, for
-example, by the Anaconda distribution described above). To
-re-equilibrate, execute the following **prior** to running simulations
-for each of the activities. From the `md_in_pchem` directory, run the
-following: 
+simulation (or equivalently to ensure that different students have
+different data to work with), it is necessary to re-equilibrate
+(generate new velocities). This requires Python and the Numpy library
+(provided, for example, by the Anaconda distribution described above,
+or by MacOS). To re-equilibrate, execute the following **prior** to
+running simulations for each of the activities. From the `md_in_pchem`
+directory, run the following:
 
 ```
 cd Prep

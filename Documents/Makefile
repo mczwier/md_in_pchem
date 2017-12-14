@@ -1,13 +1,13 @@
 # For generating PDFs from LaTeX source
+LATEX = latexmk -pdf # for pdflatex; probably safest
 #LATEX = latexmk -pdfxe  # for XeLaTeX
 #LATEX = latexmk -pdflua # for LuaLaTeX
-LATEX = latexmk -pdf # for pdflatex; probably safest
 
 # For converting LaTeX to ODT, which can then be cleaned up and saved as
 # DOCX for those who need Word-formatted documents.
 MK4HT = mk4ht oolatex
 
-# For converting ODT to DOCX
+# For converting ODT to DOCX without intervention
 SOFFICE = /Applications/LibreOffice.app/Contents/MacOS/soffice
 
 all: pdf odt docx
@@ -33,13 +33,16 @@ docx: Act01.docx Act03.docx
 
 clean:
 	rm -fv *.tmp *.aux *.fdb_latexmk *.fls *.log *.out *.toc *.synctex* *.xdv *.dvi
-	rm -fv *.xref *.4ct *.4tc *.4o? *.idv *.lg *.html *.css Act*.png Act*.pdf
+	rm -fv *.xref *.4ct *.4tc *.4o? *.idv *.lg *.html *.css Act*.png 
 	rm -fv *.work.*
 	rm -rf .auctex-auto
 
+reallyclean:
+	rm -fv Act*.pdf
+
 # So named because there's no guarantee that the odt and docx files
-# haven't been hand-patched.
-nukefromorbit: clean
+# haven't been hand-tuned.
+nukefromorbit: clean reallyclean
 	rm -fv *.docx *.odt
 
-%PHONY: all pdf odt clean nukefromorbit
+%PHONY: all pdf odt clean reallyclean nukefromorbit

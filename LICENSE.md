@@ -42,5 +42,5 @@ at <https://www.latex-project.org/lppl.txt>.
 The remaining files (including documents, LaTeX source files,
 molecular structures, and topologies) are essentially educational in
 nature, and are released under the Creative Commons Noncommercial
-Share-Alike license, available
-at <https://creativecommons.org/licenses/by-nc-sa/4.0/>
+Share-Alike license, available at 
+<https://creativecommons.org/licenses/by-nc-sa/4.0/>
