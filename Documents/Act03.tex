@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage[tuftesque]{mdpchem}
+
+\usepackage{fancyvrb}
+\fvset{fontsize=\footnotesize,frame=lines}
+
+
+\title{Phase Transitions and the Liquid State}
+\author{Physical Chemistry}
+\date{Fall 2017}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+Much — if not most — chemistry of industrial and biological significance takes place in solution, rather than in the gas phase.
+In this lab, we investigate condensation of gas to liquid and the general properties of the liquid state.
+Our simulation will compress argon gas at 100~K under 10~bar of pressure, slowly cooling it to 85~K.
+This causes a transition from gas to liquid.
+Along the way, we will make passing observations of the general properties of phase transitions.
+
+\section{Procedure}
+\begin{enumerate}
+  \item Connect to the remote desktop as you did last week.
+  \item Open a terminal.
+  \item Type each of the following commands:
+\begin{Verbatim}
+module load gromacs
+cd $WORK
+cp -a /home/classes/chem165/Lab_04 .
+cd Lab_04
+\end{Verbatim}
+  \item Run each of the following commands.
+    This sets up and runs the simulation,\mnote{a 5~ns simulation in steps of 1~fs, with atomic positions (the “movie”) recorded every 0.1~ps} which should take up to 5 minutes to complete.
+\begin{Verbatim}
+gmx grompp -f md.mdp -c equil.gro -t equil.cpt -p argon.top -o md.tpr
+gmx mdrun -nt 1 -nb cpu -s md.tpr -c md.gro -e md.edr -g md.log -x md.xtc
+echo 0 | gmx trjconv -s md.tpr -f md.xtc -o imaged.xtc -pbc atom
+\end{Verbatim}
+  \item View the evolution of this simulation in \acro{VMD} by running
+\begin{Verbatim}
+vmd -f equil.gro imaged.xtc
+\end{Verbatim}
+    Rewind the movie, set the “Step” counter to 10 and the representation to “VDW”, then play the trajectory movie.
+    In your notebook, carefully describe what you see, noting the simulation time that particularly striking changes occur.\mnote{The simulation time can be obtained from the frame number, which is in the box between the “rewind” button and the trajectory time slider.
+    This box only displays 4 digits, but you need 5; you can click and drag in the frame number box either to read the number better or to select and copy the number out.
+    You can then use this frame number and the time between frames to calculate the time at which changes occur.}
+  \item Describe the qualitative behavior of the liquid state.
+    Using the last quarter or so of the movie, zoom in so that you can see the entire box.
+    Select a single atom and change its color.\mnote{For example, use \codelit{index 0} for the atom selection and “ColorID” for the coloring method in the “Representations” dialog.}
+    Describe the motion of the atom as time progresses.
+    Is it smooth?
+    Does it make steady progress through the bulk liquid, or does it make halting progress?
+  \item Quit \acro{VMD}.
+  \item Prepare data for plots of temperature, volume, density, and energy by typing the following in the terminal:
+\begin{Verbatim}
+echo  7 | gmx energy -f md.edr -s md.tpr -o temperature.xvg -skip 10
+echo 13 | gmx energy -f md.edr -s md.tpr -o volume.xvg -skip 10
+echo 14 | gmx energy -f md.edr -s md.tpr -o density.xvg -skip 10
+echo  4 | gmx energy -f md.edr -s md.tpr -o pot_energy.xvg -skip 10
+echo  5 | gmx energy -f md.edr -s md.tpr -o kin_energy.xvg -skip 10
+echo  6 | gmx energy -f md.edr -s md.tpr -o tot_energy.xvg -skip 10
+\end{Verbatim}
+    This produces the files \filename{temperature.xvg}, \filename{volume.xvg}, \filename{density.xvg}, \emph{etc.} in the current directory.%
+    \mnote{The \codelit{-skip 10} parameter requests that data be saved every 10~frames (1~ps), which ensures that Excel is capable of handling these files.
+    If you intend to use Python to analyze your data, you can (and probably should) omit the \codelit{-skip 10} flag so that you have full-resolution data available for analysis.}
+  \item Prepare three plots in your plotting tool of choice.
+    Using the \acro{XVG} files you just produced, plot each of volume, density, kinetic energy, potential energy, and total energy (in separate plots), along with temperature on a second vertical axis for each.
+    From these plots, identify (by simulation time) the following four periods of the simulation: (1) compression, (2) cooling, (3) condensation, and (4) liquid.
+    Describe what happens to volume, density, kinetic energy, potential energy, and total energy in each of these four regions.
+    If you observe any unusual features in your graphs \emph{other} than the phase transition, view the corresponding portion of the simulation trajectory in \acro{VMD} to help you explain them.
+    Explain how the first law is preserved despite the total system energy changing.
+  \item Calculate the density of argon (1) after compression but before condensation, and (2) after condensation using the van der Waals equation and compare to the density at the corresponding points in your simulation.
+    How well do the van der Waals values and the simulated values agree?
+    If agreement is poor, use a more advanced equation of state\mnote{such as the Redlich-Kwong equation} to calculate the density.
+    Comment on which (if either) equation of state is appropriate for modeling argon under each of the two conditions.
+  \item Identify the phase transition temperature (or temperature range).
+  \item Use your plots to determine the molar energy ($\increment \overbar{U}$) and enthalpy ($\increment \overbar{H}$) of vaporization of argon.
+    If there is any ambiguity about how to determine either value, devise a way to turn this ambiguity into error bars. 
+    Find an experimental value for $\increment \overbar{H}$ for the vaporization of argon.
+    How well does your value compare?
+    What are possible explanations for any discrepancies between your measured value and the experimental value of $\increment \overbar{H}$?
+\end{enumerate}
+
+\section{Report}
+Write a narrative report containing the observations you made and answers\mnote{in prose} to the questions posed in the above procedure.
+Include a brief discussion (probably at the beginning) of why cooling argon under pressure results in condensation.
+Discuss the phase change you observed, emphasizing atomic interactions and how they give rise to changes in volume, density, and energy (all three kinds considered) during each of the four main portions of the simulation (compression, cooling, phase transition, and post-transition).
+Explain in detail how you calculated $\increment \overbar{H}\subword{vap}$.
+Present the phase transition temperature and $\increment \overbar{H}\subword{vap}$ you calculated for argon and the corresponding experimental values and discuss (\emph{i.e.} attempt to explain) any discrepancy between your results and the experimental results.
+Include all graphs produced and scans of your notebook pages.
+Submit your report electronically.
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
