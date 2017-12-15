@@ -18,37 +18,38 @@ Much — if not most — chemistry of industrial and biological significance tak
 In this lab, we investigate condensation of gas to liquid and the general properties of the liquid state.
 Our simulation will compress argon gas at 100~K under 10~bar of pressure, slowly cooling it to 85~K.
 This causes a transition from gas to liquid.
-Along the way, we will make passing observations of the general properties of phase transitions.
+Along the way, we will make passing observations of the general properties of phase transitions, and we will finally calculate the heat of vaporization of argon.
 
 \section{Procedure}
 \begin{enumerate}
-  \item Connect to the remote desktop as you did last week.
-  \item Open a terminal.
-  \item Type each of the following commands:
-\begin{Verbatim}
-module load gromacs
-cd $WORK
-cp -a /home/classes/chem165/Lab_04 .
-cd Lab_04
-\end{Verbatim}
-  \item Run each of the following commands.
+  \item Follow the instructions of your professor to start a terminal and copy the files you need into an appropriate place. Then execute the following commands. 
     This sets up and runs the simulation,\mnote{a 5~ns simulation in steps of 1~fs, with atomic positions (the “movie”) recorded every 0.1~ps} which should take up to 5 minutes to complete.
 \begin{Verbatim}
 gmx grompp -f md.mdp -c equil.gro -t equil.cpt -p argon.top -o md.tpr
 gmx mdrun -nt 1 -nb cpu -s md.tpr -c md.gro -e md.edr -g md.log -x md.xtc
-echo 0 | gmx trjconv -s md.tpr -f md.xtc -o imaged.xtc -pbc atom
 \end{Verbatim}
-  \item View the evolution of this simulation in \acro{VMD} by running
-\begin{Verbatim}
-vmd -f equil.gro imaged.xtc
-\end{Verbatim}
-    Rewind the movie, set the “Step” counter to 10 and the representation to “VDW”, then play the trajectory movie.
+The first command prepares the simulation, and the second performs the simulation.
+  \item View the evolution of this simulation in \acro{VMD}.
+    Start \acro{VMD}, then in the \selection{VMD Main} window, select \selection{File}, then \selection{New Molecule}.
+    Click the \selection{Browse} button, navigate to the directory you performed the simulation in, then choose \filename{100.gro}.
+    After returning to the \selection{Molecule File Browser} window, click \selection{Load}.
+    This loads the first frame (initial positions) of the simulation.
+    Click \selection{Browse} again, then choose \filename{md.xtc}.
+    When in the \selection{Molecule File Browser} window, choose \selection{Load all at once}, then click \selection{Load}.
+    This loads the remainder of the simulation.
+    Close the \selection{Molecule File Browser} window.
+
+  \item To see the motion of the atoms clearly, the display representation must be changed.
+    In the \selection{VMD Main} window, click on the \selection{Graphics} menu, then \selection{Representations}.
+    Change the \selection{Drawing Method} drop-down to \selection{VDW}.
+
+  \item In the \selection{VMD Main} window, rewind the movie, set the \selection{Step} counter to 10 and the representation to \selection{VDW}, then play the trajectory movie.
     In your notebook, carefully describe what you see, noting the simulation time that particularly striking changes occur.\mnote{The simulation time can be obtained from the frame number, which is in the box between the “rewind” button and the trajectory time slider.
     This box only displays 4 digits, but you need 5; you can click and drag in the frame number box either to read the number better or to select and copy the number out.
     You can then use this frame number and the time between frames to calculate the time at which changes occur.}
   \item Describe the qualitative behavior of the liquid state.
     Using the last quarter or so of the movie, zoom in so that you can see the entire box.
-    Select a single atom and change its color.\mnote{For example, use \codelit{index 0} for the atom selection and “ColorID” for the coloring method in the “Representations” dialog.}
+    Select a single atom and change its color.\mnote{For example, go to the \selection{Representations} dialog as before, select \selection{Create Rep}, then use \codelit{index 0} for the atom selection and “ColorID” for the coloring method.}
     Describe the motion of the atom as time progresses.
     Is it smooth?
     Does it make steady progress through the bulk liquid, or does it make halting progress?
@@ -64,7 +65,7 @@ echo  6 | gmx energy -f md.edr -s md.tpr -o tot_energy.xvg -skip 10
 \end{Verbatim}
     This produces the files \filename{temperature.xvg}, \filename{volume.xvg}, \filename{density.xvg}, \emph{etc.} in the current directory.%
     \mnote{The \codelit{-skip 10} parameter requests that data be saved every 10~frames (1~ps), which ensures that Excel is capable of handling these files.
-    If you intend to use Python to analyze your data, you can (and probably should) omit the \codelit{-skip 10} flag so that you have full-resolution data available for analysis.}
+    If you intend to use Python or another similarly efficient system to analyze your data, you can (and probably should) omit the \codelit{-skip 10} flag so that you have full-resolution data available for analysis.}
   \item Prepare three plots in your plotting tool of choice.
     Using the \acro{XVG} files you just produced, plot each of volume, density, kinetic energy, potential energy, and total energy (in separate plots), along with temperature on a second vertical axis for each.
     From these plots, identify (by simulation time) the following four periods of the simulation: (1) compression, (2) cooling, (3) condensation, and (4) liquid.

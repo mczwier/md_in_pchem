@@ -14,7 +14,7 @@ this software is provided in the "Getting Started" section below.
   distribution functions and the connections between molecular size
   and interaction energy and the parameters of the van der Waals
   equation. This directory (and other activity directories) also
-  contain example output and analysis.
+  contain example output and analysis. 
 * `Activity2_Meaning_Of_Beta/` — An inquiry-based activity to uncover
   the meaning of the constant (beta) in the Boltzmann distribution
   equation from the speed distribution of a real gas.
@@ -22,12 +22,18 @@ this software is provided in the "Getting Started" section below.
   argon from gas to liquid, illustrating the essential features of
   phase transitions, the structure of the liquid state, and the
   calculation of energy and enthalpy of vaporization.
-* `Documents/` — Student notes for each activity, as LaTeX sources,
-  ODT, and DOCX files.
+* `Documents/` — Student notes for Activities 1 and 3, as LaTeX
+  sources, ODT, and DOCX files. (Activity 2 is a guided inquiry, and
+  so only has instructors' notes.)
 * `Prep/` — Files and scripts necessary to prepare fully-independent
   simulations for different students or situations. Python and the
   numpy and scipy libraries are required for this; the version that
   ships with recent version of MacOS suffices.
+  
+Each simulation directory contains an example analysis notebook.
+These analysis notebooks (for example `Activity1_Analysis.ipynb` in
+`Activity1_Ideal_Real_Gases/`) can be viewed through GitHub even
+without installing or running Python.
   
 The "Getting Started" section below provides instructions for how to
 obtain the necessary software and use the files provided here.
@@ -124,8 +130,7 @@ histograms. For those wishing to use Excel but not wishing to use the
 Analysis ToolPak, a Python script (`make_vel_histogram.py`) has been
 provided to read atomic velocities and produce histograms in either a
 plain text table or CSV format. Python and Numpy are required, and the
-version of Python shipped with recent versions of MacOS suffices, as
-would Anaconda Python.
+version of Python shipped with recent versions of MacOS suffices.
 
 ### The third activity (phase changes)
 
@@ -138,6 +143,9 @@ from the `md_in_pchem` directory:
 cd Activity3_Phase_Change/
 ./run.sh
 ```
+**Alternatively**, see `Act03.pdf`, `Act03.odt`, or `Act03.docx` in
+the `Documents` directory for step-by-step instructions for both
+running and analyzing the simulation.
 
 ## Where to go next
 
