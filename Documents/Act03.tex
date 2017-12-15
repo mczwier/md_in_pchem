@@ -25,10 +25,14 @@ Along the way, we will make passing observations of the general properties of ph
   \item Follow the instructions of your professor to start a terminal and copy the files you need into an appropriate place. Then execute the following commands. 
     This sets up and runs the simulation,\mnote{a 5~ns simulation in steps of 1~fs, with atomic positions (the “movie”) recorded every 0.1~ps} which should take up to 5 minutes to complete.
 \begin{Verbatim}
+gmx grompp -f equil.mdp -c initial.gro -p argon.top -o equil.tpr
+gmx mdrun -nt 1 -nb cpu -s equil.tpr -c equil.gro -e equil.edr \
+          -g equil.log -x equil.xtc -cpo equil.cpt
 gmx grompp -f md.mdp -c equil.gro -t equil.cpt -p argon.top -o md.tpr
 gmx mdrun -nt 1 -nb cpu -s md.tpr -c md.gro -e md.edr -g md.log -x md.xtc
 \end{Verbatim}
-The first command prepares the simulation, and the second performs the simulation.
+If you are typing these commands each on one line, omit the backslash in the second command.
+The first two commands bring our system of 100 argon atoms to a temperature of 140~K, and the second two commands perform the simulated compression.
   \item View the evolution of this simulation in \acro{VMD}.
     Start \acro{VMD}, then in the \selection{VMD Main} window, select \selection{File}, then \selection{New Molecule}.
     Click the \selection{Browse} button, navigate to the directory you performed the simulation in, then choose \filename{100.gro}.
