@@ -1,7 +1,7 @@
 # For generating PDFs from LaTeX source
-LATEX = latexmk -pdf # for pdflatex; probably safest
+#LATEX = latexmk -pdf # for pdflatex; probably safest
 #LATEX = latexmk -pdfxe  # for XeLaTeX
-#LATEX = latexmk -pdflua # for LuaLaTeX
+LATEX = latexmk -pdflua # for LuaLaTeX
 
 # For converting LaTeX to ODT, which can then be cleaned up and saved as
 # DOCX for those who need Word-formatted documents.
